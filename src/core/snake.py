@@ -10,8 +10,14 @@ class Snake:
     def set_direction(self, new_direction: Position):
         self.direction = new_direction
 
-    def move(self):
+    def move(self, grow: bool = False):
         head_x, head_y = self.body[0]
         dx, dy = self.direction
+
         new_head = (head_x + dx, head_y + dy)
-        self.body.pop()
+
+        # Adicionando a nova cabeça à frente do corpo
+        self.body.insert(0, new_head)
+        
+        if not grow:
+            self.body.pop()
