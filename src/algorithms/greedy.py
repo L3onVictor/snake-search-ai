@@ -1,15 +1,12 @@
+import manhattan_distance
+
 class GreedySearch:
     def __init__(self, board, snake, food):
         self.board = board
         self.snake = snake
         self.food = food
-
-    def manhattan_distance(self, pos):
-        fx, fy = self.food.position
-        x, y = pos
-        return abs(x - fx) + abs(y - fy)
     
-    def get_best_move(self):
+    def get_move(self):
         head = self.snake.body[0]
 
         neighbors = self.board.get_neighbors(head)
