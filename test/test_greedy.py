@@ -27,7 +27,7 @@ for step in range(30):
     print(f"STEP {step}")
     print_board()
 
-    move = agent.get_best_move()
+    move = agent.get_move()
 
     if move is None:
         print("Sem movimentos possíveis")

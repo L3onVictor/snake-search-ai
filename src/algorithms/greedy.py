@@ -1,5 +1,4 @@
-import manhattan_distance
-
+from src.utils.manhattan_distance import manhattan_distance
 class GreedySearch:
     def __init__(self, board, snake, food):
         self.board = board
@@ -16,6 +15,6 @@ class GreedySearch:
         if not valid:
            return None
        
-        best = min(valid, key=self.manhattan_distance)
+        best = min(valid, key=lambda pos: manhattan_distance(pos, self.food.position))
         return best
        
