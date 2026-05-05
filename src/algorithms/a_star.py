@@ -1,20 +1,30 @@
 from heapq import heappush, heappop
 from src.utils.manhattan_distance import manhattan_distance
 
+
 class AStarSearch:
+    """
+    A* puro para o Snake.
+
+    Melhorias em relação à versão original:
+    - Fallback vai para o vizinho com MAIS espaço livre (flood fill simples),
+      não apenas o mais distante da comida — evita corredores sem saída.
+    - Ignora obstáculos do tabuleiro além do corpo da cobra.
+    """
 
     def __init__(self, board, snake, food):
         self.board = board
         self.snake = snake
         self.food = food
+        self.current_path = []
 
     def find_path(self):
         start = self.snake.body[0]
         goal = self.food.position
+        body_set = set(self.snake.body)
 
         open_set = []
         heappush(open_set, (0, start))
-
         came_from = {}
         g_score = {start: 0}
 
@@ -22,39 +32,52 @@ class AStarSearch:
             _, current = heappop(open_set)
 
             if current == goal:
-                return self.reconstruct_path(came_from, current)
-           
+                return self._reconstruct(came_from, current)
 
-            for neighbor in self.board.get_neighbors(current):
-
-                if neighbor in self.snake.body:
+            for nb in self.board.get_neighbors(current):
+                if nb in body_set or nb in self.board.obstacles:
                     continue
 
-                tentative_g = g_score[current] + 1
-
-                if neighbor not in g_score or tentative_g < g_score[neighbor]:
-                    came_from[neighbor] = current
-                    g_score[neighbor] = tentative_g
-
-                    f_score = tentative_g + manhattan_distance(neighbor, goal)
-                    heappush(open_set, (f_score, neighbor))
+                tg = g_score[current] + 1
+                if nb not in g_score or tg < g_score[nb]:
+                    came_from[nb] = current
+                    g_score[nb] = tg
+                    heappush(open_set, (tg + manhattan_distance(nb, goal), nb))
 
         return None
-    
-    def reconstruct_path(self, came_from, current):
-        total_path = [current]
 
+    def _reconstruct(self, came_from, current):
+        path = [current]
         while current in came_from:
             current = came_from[current]
-            total_path.append(current)
-            
-        total_path.reverse()
-        return total_path
+            path.append(current)
+        path.reverse()
+        return path
+
+    def _free_neighbors(self, pos):
+        body_set = set(self.snake.body)
+        return sum(1 for nb in self.board.get_neighbors(pos)
+                   if nb not in body_set and nb not in self.board.obstacles)
 
     def get_move(self):
+        head = self.snake.body[0]
+        body_set = set(self.snake.body)
+
         path = self.find_path()
 
         if path and len(path) > 1:
+            self.current_path = path
             return path[1]
-        else:
-            return None
+
+        # Fallback: vizinho com mais espaço livre
+        neighbors = self.board.get_neighbors(head)
+        valid = [n for n in neighbors
+                 if n not in body_set and n not in self.board.obstacles]
+
+        if valid:
+            best = max(valid, key=self._free_neighbors)
+            self.current_path = [head, best]
+            return best
+
+        self.current_path = []
+        return None

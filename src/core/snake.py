@@ -4,7 +4,7 @@ Position = Tuple[int, int]
 
 class Snake:
     def __init__(self, start_pos: Position):
-        self.body: list[Position] = [start_pos]
+        self.body: list[Position] = [start_pos, (start_pos[0] - 1, start_pos[1]), (start_pos[0] - 2, start_pos[1])] # corpo inicial com 3 segmentos
         self.direction = (1, 0) # inicialmente se movendo para a direita
 
     def set_direction(self, new_direction: Position):
