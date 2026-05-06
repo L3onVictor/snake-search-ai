@@ -6,16 +6,6 @@ from src.utils.manhattan_distance import manhattan_distance
 class AStarSmartSearch:
     """
     A* modificado com detecção de regiões fechadas.
-
-    Lógica (fiel ao artigo):
-    1. Calcula o menor caminho até a comida via A*.
-    2. Antes de confirmar o próximo passo, verifica se ele cria
-       uma região fechada no tabuleiro (flood fill < limiar).
-    3. Se o passo cria região fechada mas existe alternativa que não cria,
-       usa a alternativa.
-    4. Se não há caminho até a comida (ou todos criam região fechada),
-       busca o menor caminho até a cauda da cobra.
-    5. Se nada funcionar, vai para o vizinho com mais espaço livre.
     """
 
     def __init__(self, board, snake, food):

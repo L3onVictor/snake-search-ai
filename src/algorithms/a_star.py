@@ -5,11 +5,6 @@ from src.utils.manhattan_distance import manhattan_distance
 class AStarSearch:
     """
     A* puro para o Snake.
-
-    Melhorias em relação à versão original:
-    - Fallback vai para o vizinho com MAIS espaço livre (flood fill simples),
-      não apenas o mais distante da comida — evita corredores sem saída.
-    - Ignora obstáculos do tabuleiro além do corpo da cobra.
     """
 
     def __init__(self, board, snake, food):

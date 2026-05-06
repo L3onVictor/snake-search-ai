@@ -315,7 +315,7 @@ while running:
                 if will_eat:
                     score += 1
                     food.spawn(snake.body, board.obstacles)
-                if not grow_enabled and total_steps_since_start % 25 == 0:
+                if not grow_enabled and total_steps_since_start % 30 == 0:
                     spawn_obstacle()
         else:
             game_state = "GAME_OVER"
